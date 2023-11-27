@@ -7,6 +7,10 @@
         android:title="@string/menu_home"
         app:showAsAction="ifRoom"/>
 
+    <item android:id="@+id/blank"
+        android:title=""
+        android:enabled="false"/>
+
     <item
         android:id="@+id/menu_list"
         android:icon="@drawable/selector_btm_nav_list"
