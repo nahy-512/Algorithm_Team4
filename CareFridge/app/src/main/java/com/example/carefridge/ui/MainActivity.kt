@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import com.example.carefridge.R
 import com.example.carefridge.databinding.ActivityMainBinding
 import com.example.carefridge.ui.home.HomeFragment
-import com.example.carefridge.ui.list.ListFragment
+import com.example.carefridge.ui.ingredient.IngredientFragment
 import com.quintable.jpower.config.BaseActivity
 
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
@@ -41,7 +41,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
                 }
 
                 R.id.menu_list -> {
-                    ListFragment().changeFragment()
+                    IngredientFragment().changeFragment()
                     Log.d("MainActivity", "ListFragment")
                 }
             }

@@ -4,7 +4,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="transparent">#00FFFFFF</color>
 
-    <color name="blue">#5FB1F4</color>
-    <color name="sky_blue">#8AC9FB</color>
+    <color name="blue">#8AC9FB</color>
+    <color name="sky_blue">#B8E0FF</color> //#A6D8FF
     <color name="dark_gray">#5E5F60</color>
 </resources>
