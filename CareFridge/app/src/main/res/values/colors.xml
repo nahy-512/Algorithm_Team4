@@ -6,5 +6,9 @@
 
     <color name="blue">#8AC9FB</color>
     <color name="sky_blue">#B8E0FF</color> //#A6D8FF
+    <color name="light_blue">#CAE8FF</color>
+
     <color name="dark_gray">#5E5F60</color>
+    <color name="gray">#F9F9F9</color>
+    <color name="placeholder">#BBBBBB</color>
 </resources>

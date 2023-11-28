@@ -5,11 +5,13 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import com.example.carefridge.R
 import com.example.carefridge.databinding.ActivityMainBinding
+import com.example.carefridge.ui.add.AddDialog
+import com.example.carefridge.ui.add.AddDialogInterface
 import com.example.carefridge.ui.home.HomeFragment
 import com.example.carefridge.ui.ingredient.IngredientFragment
 import com.quintable.jpower.config.BaseActivity
 
-class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
+class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate), AddDialogInterface {
 
     private val manager = supportFragmentManager
 
@@ -18,12 +20,22 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
         showInit()
         initBottomNav()
+        showAddDialog()
     }
 
     private fun showInit() {
         val transaction = manager.beginTransaction()
             .add(R.id.main_frm, HomeFragment())
         transaction.commitAllowingStateLoss()
+    }
+
+    private fun showAddDialog() {
+        binding.mainFloatingAddBtn.setOnClickListener {
+            val dialog = AddDialog(this)
+            // 알림창이 띄워져있는 동안 배경 클릭 막기
+            dialog.isCancelable = false
+            dialog.show(this.supportFragmentManager, "AddDialog")
+        }
     }
 
     private fun initBottomNav() {
@@ -53,5 +65,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
     private fun Fragment.changeFragment() {
         manager.beginTransaction().replace(R.id.main_frm, this).commitAllowingStateLoss()
+    }
+
+    override fun onClickYesButton() {
+        //TODO: RoomDB에 재료 추가 진행
     }
 }

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_dialog"
+    android:gravity="center"
+    android:minWidth="315dp"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/dialog_title_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="@string/dialog_add_title_tv"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:text="@string/dialog_add_ingredient_name_tv"
+            style="@style/dialog_add_input_tv" />
+
+        <EditText
+            android:id="@+id/dialog_add_name_et"
+            android:hint="@string/dialog_add_ingredient_name_hint"
+            style="@style/dialog_add_input_et" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:text="@string/dialog_add_ingredient_expirationDate_tv"
+            style="@style/dialog_add_input_tv" />
+
+        <EditText
+            android:id="@+id/dialog_add_expirationDate_et"
+            android:hint="@string/dialog_add_ingredient_expirationDate_hint"
+            android:focusable="false"
+            android:cursorVisible="false"
+            style="@style/dialog_add_input_et" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:text="@string/dialog_add_ingredient_amount_tv"
+            style="@style/dialog_add_input_tv" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:layout_gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/dialog_add_amount_minus_iv"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:padding="5dp"
+                android:background="@drawable/bg_oval_fill_btn"
+                android:src="@drawable/ic_minus"/>
+
+            <TextView
+                android:id="@+id/dialog_add_amount_tv"
+                android:layout_marginHorizontal="16dp"
+                android:textAlignment="center"
+                android:text="@string/dialog_add_ingredient_amount_et"
+                style="@style/dialog_add_input_et" />
+
+            <ImageView
+                android:id="@+id/dialog_add_amount_plus_iv"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:padding="5dp"
+                android:background="@drawable/bg_oval_fill_btn"
+                android:src="@drawable/ic_plus"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:text="@string/dialog_add_ingredient_prefer_tv"
+            style="@style/dialog_add_input_tv" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/dialog_add_prefer_toggle_btn"
+            android:layout_width="52dp"
+            android:layout_height="wrap_content"
+            style="@style/toggle"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/dialog_no_btn"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="@color/white"
+            android:text="@string/dialog_cancel"
+            android:textColor="@color/dark_gray"
+            style="@style/dialog_add_btn"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/dialog_yes_btn"
+            android:text="@string/dialog_add"
+            style="@style/dialog_add_btn" />
+
+    </LinearLayout>
+
+</LinearLayout>
