@@ -1,35 +1,39 @@
 package com.example.carefridge.ui.add
 
+import android.app.DatePickerDialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.DatePicker
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import com.example.carefridge.R
 import com.example.carefridge.databinding.DialogAddBinding
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 interface AddDialogInterface {
     fun onClickYesButton()
 }
 
 class AddDialog(
-    confirmDialogInterface: AddDialogInterface,
-) : DialogFragment() {
+    private val confirmDialogInterface: AddDialogInterface,
+) : DialogFragment(), DatePickerDialog.OnDateSetListener {
 
     // 뷰 바인딩 정의
     private var _binding: DialogAddBinding? = null
     private val binding get() = _binding!!
 
-    private var confirmDialogInterface: AddDialogInterface? = null
-
     private var amount = 150 // 초기값
-
-    init {
-        this.confirmDialogInterface = confirmDialogInterface
-    }
+    private var selectedDate: Calendar? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -72,13 +76,51 @@ class AddDialog(
 
         // 확인 버튼 클릭
         binding.dialogYesBtn.setOnClickListener {
-            this.confirmDialogInterface?.onClickYesButton()
+            this.confirmDialogInterface.onClickYesButton()
             dismiss()
         }
 
+        // 유통 기한 선택
         binding.dialogAddExpirationDateEt.setOnClickListener {
-            Log.d("AddDialog", "유통 기한 et 클릭")
-            //TODO: 유통기한 날짜 선택하기
+            // 날짜 선택 다이얼로그 띄우기
+            showExpirationDatePicker()
         }
+    }
+
+    private fun showExpirationDatePicker() {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        // 달력 만들기
+        val datePickerDialog = DatePickerDialog(requireContext(), this, year, month, day)
+        // 오늘 이전 날짜는 선택 불가능하게
+        datePickerDialog.datePicker.minDate = System.currentTimeMillis() - 1000
+        // 다이얼로그 띄우기
+        datePickerDialog.show()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+        selectedDate = Calendar.getInstance()
+        selectedDate?.set(Calendar.YEAR, year)
+        selectedDate?.set(Calendar.MONTH, month)
+        selectedDate?.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+
+        // Calendar -> LocalDateTime 변환
+        val localDateTime = selectedDate?.toInstant()?.atZone(ZoneId.systemDefault())?.toLocalDateTime()
+
+        updateExpirationDateText(localDateTime)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun updateExpirationDateText(localDateTime: LocalDateTime?) {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.getDefault())
+        val formattedDate = localDateTime?.format(formatter)
+
+        // 받아온 날짜로 유통기한 텍스트 세팅
+        binding.dialogAddExpirationDateEt.setText(formattedDate)
+        Log.d("AddDialog/Date", "localDateTime: ${localDateTime}, formattedDate: $formattedDate")
     }
 }
