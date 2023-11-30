@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import com.example.carefridge.R
@@ -85,6 +86,19 @@ class AddDialog(
             // 날짜 선택 다이얼로그 띄우기
             showExpirationDatePicker()
         }
+
+        binding.dialogAddAmountMinusIv.setOnClickListener {
+            if (!canUpdateAmount()) {
+                Toast.makeText(requireContext(), "최소값은 50입니다.", Toast.LENGTH_SHORT).show()
+            } else {
+                updateAmount(-1)
+            }
+        }
+
+        binding.dialogAddAmountPlusIv.setOnClickListener {
+            updateAmount(+1)
+        }
+
     }
 
     private fun showExpirationDatePicker() {
@@ -122,5 +136,14 @@ class AddDialog(
         // 받아온 날짜로 유통기한 텍스트 세팅
         binding.dialogAddExpirationDateEt.setText(formattedDate)
         Log.d("AddDialog/Date", "localDateTime: ${localDateTime}, formattedDate: $formattedDate")
+    }
+
+    private fun updateAmount(direct: Int) {
+        amount += direct * 50
+        binding.dialogAddAmountTv.text = getString(R.string.dialog_add_ingredient_amount_et, amount)
+    }
+
+    private fun canUpdateAmount(): Boolean {
+        return amount > 50
     }
 }
