@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.GridLayoutManager
 import com.example.carefridge.R
 import com.example.carefridge.data.FridgeDatabase
 import com.example.carefridge.data.entities.Ingredient
@@ -17,6 +16,8 @@ class IngredientFragment : BaseFragment<FragmentIngredientBinding>(FragmentIngre
     private lateinit var db: FridgeDatabase
 
     private var ingredients = arrayListOf<Ingredient>()
+
+    private var isItemDecorationAdded = false // 간격을 초기에만 설정해주기 위함
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -66,10 +67,13 @@ class IngredientFragment : BaseFragment<FragmentIngredientBinding>(FragmentIngre
         // 리사이클러뷰에 어댑터 연결
         binding.ingredientRv.adapter = adapter
         // 레이아웃 매니저 설정
-        binding.ingredientRv.run {
-            val spanCount = 2
-            val space = 20 // 20dp로 간격 지정
-            addItemDecoration(GridSpaceItemDecoration(spanCount, space))
+        if (!isItemDecorationAdded) {
+            binding.ingredientRv.run {
+                val spanCount = 2
+                val space = 20 // 20dp로 간격 지정
+                addItemDecoration(GridSpaceItemDecoration(spanCount, space))
+            }
+            isItemDecorationAdded = true // 변수 업데이트
         }
 
         db.ingredientDao().getIngredientsLiveData().observe(viewLifecycleOwner, Observer { ingredients ->

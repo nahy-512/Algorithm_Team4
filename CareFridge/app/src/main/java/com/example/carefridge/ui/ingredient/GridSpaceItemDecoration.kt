@@ -21,10 +21,11 @@ class GridSpaceItemDecoration(private val spanCount: Int, private val space: Int
 //            outRect.top = space
 //        }
 //        outRect.bottom = space
-        // 첫번째 열을 제외하고 좌측 여백 추가
-        if (column != 1) {
+        // 첫번째 열이면 우측 여백 추가, 두번째 열이면 좌측 여백 추가
+        if (column == 1) {
+            outRect.right = space
+        } else {
             outRect.left = space
         }
-        outRect.right = space
     }
 }
