@@ -14,4 +14,7 @@
     <string name="dialog_add_ingredient_expirationDate_tv">유통기한</string>
     <string name="dialog_add_ingredient_expirationDate_hint">2023-11-29</string>
     <string name="dialog_add_ingredient_prefer_tv">선호 여부</string>
+
+    <!-- 재료 화면 -->
+    <string name="item_ingredient_amount_tv">%d g</string>
 </resources>
