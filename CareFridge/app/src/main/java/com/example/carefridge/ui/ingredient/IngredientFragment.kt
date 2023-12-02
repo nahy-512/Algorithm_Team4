@@ -46,8 +46,8 @@ class IngredientFragment : BaseFragment<FragmentIngredientBinding>(FragmentIngre
                     insert(Ingredient("고기", 500))
                     insert(Ingredient("채소", 400))
                     insert(Ingredient("밥", 500))
-                    insert(Ingredient("면", 500))
-                    insert(Ingredient("빵", 400))
+                    insert(Ingredient("면", 500, isPrefer = true))
+                    insert(Ingredient("빵", 400, isPrefer = true))
                     insert(Ingredient("소고기", 200))
                 }
                 // 추가했다면 다시 데이터를 ingredients에 넣어줌
@@ -82,6 +82,21 @@ class IngredientFragment : BaseFragment<FragmentIngredientBinding>(FragmentIngre
             }
         })
 
-        //TODO: 아이템 클릭 이벤트 추가
+        adapter.setMyItemClickListener(object : IngredientRVAdapter.MyItemClickListener {
+            override fun onItemClick(ingredient: Ingredient, position: Int) {
+                Log.d("INGREDIENT-FRAG", "재료 아이템 클릭!")
+                Log.e("SET-INGREDIENT", "$ingredient , $position")
+
+                // 편집 바텀시트 띄우기
+                showEditBottomSheetDialog(ingredient)
+            }
+        })
+    }
+
+    private fun showEditBottomSheetDialog(ingredient: Ingredient){
+        Log.d("ShowDialog", "success")
+        val dialog = EditIngredientBottomSheetDialog(ingredient)
+
+        dialog.show(requireActivity().supportFragmentManager, dialog.tag)
     }
 }

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingVertical="20dp"
+    android:paddingHorizontal="16dp"
+    android:background="@color/light_blue">
+
+    <TextView
+        android:id="@+id/dialog_edit_ingredient_title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:fontFamily="@font/bmjua"
+        android:text="@string/dialog_edit_ingredient_title_tv"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageView
+        android:id="@+id/dialog_edit_ingredient_close_iv"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:padding="5dp"
+        android:src="@drawable/ic_close"
+        app:layout_constraintTop_toTopOf="@id/dialog_edit_ingredient_title_tv"
+        app:layout_constraintBottom_toBottomOf="@id/dialog_edit_ingredient_title_tv"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <LinearLayout
+        android:id="@+id/dialog_edit_ingredient_content_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/dialog_edit_ingredient_title_tv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:text="@string/dialog_add_ingredient_name_tv"
+                style="@style/dialog_add_input_tv" />
+
+            <EditText
+                android:id="@+id/dialog_edit_ingredient_name_et"
+                android:hint="@string/dialog_add_ingredient_name_hint"
+                style="@style/dialog_add_input_et" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:text="@string/dialog_add_ingredient_expirationDate_tv"
+                style="@style/dialog_add_input_tv" />
+
+            <EditText
+                android:id="@+id/dialog_edit_ingredient_expirationDate_et"
+                android:hint="@string/dialog_add_ingredient_expirationDate_hint"
+                android:focusable="false"
+                android:cursorVisible="false"
+                style="@style/dialog_add_input_et" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:text="@string/dialog_add_ingredient_amount_tv"
+                style="@style/dialog_add_input_tv" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:layout_gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/dialog_edit_ingredient_amount_minus_iv"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:padding="5dp"
+                    android:background="@drawable/bg_oval_fill_btn"
+                    android:src="@drawable/ic_minus"/>
+
+                <TextView
+                    android:id="@+id/dialog_edit_ingredient_amount_tv"
+                    android:layout_marginHorizontal="16dp"
+                    android:textAlignment="center"
+                    android:text="@string/dialog_add_ingredient_amount_et"
+                    style="@style/dialog_add_input_et" />
+
+                <ImageView
+                    android:id="@+id/dialog_edit_ingredient_amount_plus_iv"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:padding="5dp"
+                    android:background="@drawable/bg_oval_fill_btn"
+                    android:src="@drawable/ic_plus"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:text="@string/dialog_add_ingredient_prefer_tv"
+                style="@style/dialog_add_input_tv" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/dialog_edit_ingredient_prefer_toggle_btn"
+                android:layout_width="52dp"
+                android:layout_height="wrap_content"
+                style="@style/toggle"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/dialog_edit_ingredient_delete_btn"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="@color/white"
+                android:text="@string/dialog_delete"
+                android:textColor="@color/dark_gray"
+                style="@style/dialog_add_btn"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/dialog_edit_ingredient_done_btn"
+                android:text="@string/dialog_edit"
+                style="@style/dialog_add_btn"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

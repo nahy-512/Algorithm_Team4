@@ -32,6 +32,7 @@ class AddDialog(
     // 뷰 바인딩 정의
     private var _binding: DialogAddBinding? = null
     private val binding get() = _binding!!
+    val JUMPING_RATE = 50
 
     private var amount = 150 // 초기값
     private var selectedDate: Calendar? = null
@@ -139,11 +140,11 @@ class AddDialog(
     }
 
     private fun updateAmount(direct: Int) {
-        amount += direct * 50
+        amount += direct * JUMPING_RATE
         binding.dialogAddAmountTv.text = getString(R.string.dialog_add_ingredient_amount_et, amount)
     }
 
     private fun canUpdateAmount(): Boolean {
-        return amount > 50
+        return amount > JUMPING_RATE
     }
 }
