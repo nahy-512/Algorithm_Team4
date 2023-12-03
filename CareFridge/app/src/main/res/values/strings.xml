@@ -22,4 +22,9 @@
     <string name="item_ingredient_amount_tv">%d g</string>
     <string name="item_ingredient_dDay_tv">D%1$s%2$d\u0020</string>
     <string name="item_ingredient_dDay">D-Day</string>
+
+    <!-- 메뉴 추천 화면 -->
+    <string name="dialog_recommend_menu_title">메뉴 추천 받기</string>
+    <string name="dialog_recommend_menu_again">다시 추천 받기</string>
+    <string name="dialog_recommend_menu_try">만들어 먹기</string>
 </resources>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/baby_blue"
+    android:gravity="center"
+    android:minWidth="300dp"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/dialog_recommend_menu_title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_recommend_menu_title"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <ImageView
+            android:id="@+id/dialog_recommend_menu_close_iv"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:padding="5dp"
+            android:src="@drawable/ic_close"
+            app:layout_constraintTop_toTopOf="@id/dialog_recommend_menu_title_tv"
+            app:layout_constraintBottom_toBottomOf="@id/dialog_recommend_menu_title_tv"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/dialog_recommend_menu_iv"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="30dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_menu_spaghetti"/>
+
+    <TextView
+        android:id="@+id/dialog_recommend_menu_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="스파게티"
+        android:textSize="22sp"
+        android:textColor="@color/dark_gray"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/dialog_recommend_menu_again_btn"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="@color/white"
+            android:text="@string/dialog_recommend_menu_again"
+            android:textColor="@color/dark_gray"
+            style="@style/dialog_add_btn"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/dialog_recommend_menu_try_btn"
+            android:text="@string/dialog_recommend_menu_try"
+            style="@style/dialog_add_btn" />
+
+    </LinearLayout>
+
+</LinearLayout>

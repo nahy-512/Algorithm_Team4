@@ -11,6 +11,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        showRecommendMenuDialog()
     }
 
     override fun onStart() {
@@ -24,5 +26,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         val anim = AnimationUtils.loadAnimation(requireContext(), R.anim.blink_animation)
         // 애니메이션 재생
         binding.homeRecommendBtn.startAnimation(anim)
+    }
+
+    private fun showRecommendMenuDialog() {
+        binding.homeRecommendBtn.setOnClickListener {
+            val dialog = RecommendMenuDialog()
+            // 알림창이 띄워져있는 동안 배경 클릭 막기
+            dialog.isCancelable = false
+            dialog.show(this.requireFragmentManager(), "AddDialog")
+        }
     }
 }
