@@ -24,4 +24,8 @@ interface RecipeDao {
 
     @Query("SELECT * FROM recipeTable")
     fun getRecipesLiveData(): LiveData<List<Recipe>>
+
+    // id로 레시피 찾기
+    @Query("SELECT * FROM recipeTable WHERE id = :recipeId")
+    fun getRecipeById(recipeId: Int): Recipe?
 }

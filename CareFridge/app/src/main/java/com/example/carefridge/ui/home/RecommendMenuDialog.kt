@@ -1,7 +1,6 @@
 package com.example.carefridge.ui.home
 
 import android.content.res.TypedArray
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -12,7 +11,6 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import com.example.carefridge.R
 import com.example.carefridge.algorithm.MenuRecommendAlgorithm
@@ -35,9 +33,13 @@ class RecommendMenuDialog : DialogFragment() {
 
     private var recipes = arrayListOf<Recipe>()
 
-    private var currentmenuIndex = 0
+    private var currentMenuIndex = 0
     private val handler = Handler()
     private val delay = 200L // 0.2초
+
+    // 추천 결과
+    private var recommendMenu: String? = null
+    private var recommendMenuId: Int? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,9 +60,10 @@ class RecommendMenuDialog : DialogFragment() {
     override fun onStart() {
         super.onStart()
 
-        setInitialRecipes()
+        // DB에서 레시피 조회하기
+        getRecipes()
+        // 조회 결과가 나올 때까지 이미지 바꾸기
         changeMenuImg()
-
         // 메뉴 추천 진행
         getRecommendMenu()
     }
@@ -98,40 +101,36 @@ class RecommendMenuDialog : DialogFragment() {
     }
 
     private fun getRecommendMenu() {
-        val recommendMenu = MenuRecommendAlgorithm.main(getIngredients(), recipes, getUserPreferIngredients())
-        //TODO: 메뉴 세팅
-
+        recommendMenu = MenuRecommendAlgorithm.main(getIngredients(), recipes, getUserPreferIngredients())
+        // 메뉴 세팅
+        recommendMenuId = findRecipeIdByName(recommendMenu)
     }
 
-    private fun setInitialRecipes() {
-        // DB의 재료 정보를 불러옴
-        recipes = db.recipeDao().getRecipes() as ArrayList<Recipe>
+    private fun findRecipeIdByName(menuName: String?): Int? {
+        return recipes.find { it.name == menuName }?.id
+    }
 
-        if (recipes.isNotEmpty())
-            return
-        else {
-            // 재료 데이터가 없을 때의 처리
-            Thread{
-                // recipes가 비어있다면 더미데이터를 넣어줌
-                db.recipeDao().apply {
-                    insert(Recipe("스파게티", listOf("밥" to 100, "고기" to 100, "채소" to 100, "소스" to 50)))
-                    insert(Recipe("비빔밥", listOf("밥" to 100, "고기" to 100, "채소" to 100, "소스" to 50)))
-                    insert(Recipe("짜장면", listOf("면" to 150, "고기" to 50, "채소" to 50, "소스" to 30)))
-                    insert(Recipe("스테이크", listOf("소고기" to 200, "채소" to 50, "소스" to 30)))
-                    insert(Recipe("샌드위치", listOf("빵" to 100, "고기" to 50, "채소" to 80)))
-                }
-                // 추가했다면 다시 데이터를 ingredients에 넣어줌
-                recipes = db.recipeDao().getRecipes() as ArrayList<Recipe>
+    private fun setRecommendationResult() {
+        // 추천 결과를 받은 후에는 애니메이션을 멈추고, 추천된 메뉴의 이미지와 이름으로 업데이트
+        handler.removeCallbacksAndMessages(null)
 
-                // 데이터가 잘 들어왔는지 확인
-                val _recipes = db.recipeDao().getRecipesLiveData()
-                Log.d("DB recipes data", _recipes.toString())
-            }.start()
+        // 추천 결과가 없으면 처리 종료
+        if (recommendMenuId == null) return
+
+        val recommendedRecipe = db.recipeDao().getRecipeById(recommendMenuId!!)
+        recommendedRecipe?.let {
+            // 이미지와 이름을 업데이트
+            binding.dialogRecommendMenuIv.setImageResource(menuImgList.getResourceId(currentMenuIndex, -1))
+            binding.dialogRecommendMenuNameTv.text = it.name
         }
     }
 
     private fun getIngredients(): List<Ingredient> {
         return db.ingredientDao().getIngredients()
+    }
+
+    private fun getRecipes() {
+        recipes = db.recipeDao().getRecipes() as ArrayList<Recipe>
     }
 
     private fun getUserPreferIngredients(): List<String> {
@@ -151,6 +150,7 @@ class RecommendMenuDialog : DialogFragment() {
         }, delay)
     }
 
+
     private fun changeMenuWithAnimation(menuIv: ImageView, menuTv: TextView) {
         val fadeInAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in)
         val fadeOutAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_out)
@@ -162,13 +162,18 @@ class RecommendMenuDialog : DialogFragment() {
             override fun onAnimationStart(animation: Animation?) {}
 
             override fun onAnimationEnd(animation: Animation?) {
-                currentmenuIndex = (currentmenuIndex + 1) % menuNameList.size
+                currentMenuIndex = (currentMenuIndex + 1) % menuNameList.size
                 // 이미지 교체
-                menuIv.setImageResource(menuImgList.getResourceId(currentmenuIndex, -1))
+                menuIv.setImageResource(menuImgList.getResourceId(currentMenuIndex, -1))
                 menuIv.startAnimation(fadeInAnimation)
                 // 텍스트 교체
-                menuTv.text = menuNameList[currentmenuIndex]
+                menuTv.text = menuNameList[currentMenuIndex]
                 menuIv.startAnimation(fadeInAnimation)
+
+                // 추천 결과가 있으면 애니메이션을 멈추고 결과를 업데이트
+                if (recommendMenu != null) {
+                    setRecommendationResult()
+                }
             }
 
             override fun onAnimationRepeat(animation: Animation?) {}

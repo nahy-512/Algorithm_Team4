@@ -4,22 +4,23 @@ import android.util.Log
 import com.example.carefridge.data.entities.Ingredient
 import com.example.carefridge.data.entities.Recipe
 
-// 메뉴 추천 알고리즘 코드
+// 냉장고 음식 기반 메뉴 추천 알고리즘 코드
 object MenuRecommendAlgorithm {
 
     // 사용자의 선호 재료 목록을 저장할 Set
     private var userPreferences : List<String>? = null
 
     fun main(ingredients: List<Ingredient>, recipes: List<Recipe>, userPreferences: List<String>): String {
-        initializeUserPreferences(userPreferences) // 사용자의 선호 재료 목록 초기화
-
+        // 사용자의 선호 재료 목록 초기화
+        initializeUserPreferences(userPreferences)
+        // 인자로 잘 넘어왔는지 로그 확인
         Log.d("RecommendAlgo", "재료: ${ingredients},\n레시피: ${recipes},\n사용자 선호 음식: $userPreferences")
 
         val recorecommendMenu = recommendMenu(ingredients, recipes)
 
         // 메뉴 추천 및 결과 출력
         Log.d("RecommendAlgo", "추천 음식: $recorecommendMenu")
-
+        // 추천 받은 메뉴를 반환
         return recorecommendMenu
     }
 
