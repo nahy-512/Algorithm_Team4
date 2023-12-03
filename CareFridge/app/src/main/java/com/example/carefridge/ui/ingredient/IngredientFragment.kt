@@ -1,10 +1,8 @@
 package com.example.carefridge.ui.ingredient
 
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import com.example.carefridge.R
 import com.example.carefridge.data.FridgeDatabase

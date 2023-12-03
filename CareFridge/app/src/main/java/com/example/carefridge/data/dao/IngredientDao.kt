@@ -19,6 +19,9 @@ interface IngredientDao {
     @Delete
     fun delete(ingredient: Ingredient)
 
+    @Query("DELETE FROM IngredientTable WHERE id=:ingredientId")
+    fun deleteIngredientById(ingredientId: Int)
+
     @Query("SELECT * FROM IngredientTable")
     fun getIngredients(): List<Ingredient>
 

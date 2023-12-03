@@ -120,7 +120,7 @@ class EditIngredientBottomSheetDialog(var ingredient: Ingredient): BottomSheetDi
         }
 
         val thread = Thread{
-            // roomDB에 추가
+            // roomDB에 업데이트
             db.ingredientDao().update(ingredient)
         }
         thread.start()
@@ -134,6 +134,14 @@ class EditIngredientBottomSheetDialog(var ingredient: Ingredient): BottomSheetDi
 
         // 종료
         dismiss()
+    }
+
+    private fun deleteIngredient() {
+        Thread{
+            // roomDB에서 삭제
+            db.ingredientDao().deleteIngredientById(ingredient.id)
+        }.start()
+        Toast.makeText(requireContext(), "${ingredient.name}이/가 삭제되었습니다.", Toast.LENGTH_SHORT).show()
     }
 
     private fun showExpirationDatePicker() {
@@ -203,7 +211,8 @@ class EditIngredientBottomSheetDialog(var ingredient: Ingredient): BottomSheetDi
             .setPositiveButton("확인",
                 DialogInterface.OnClickListener { dialog, id ->
                     Log.d("EditDialog", "삭제 버튼 클릭")
-                    //TODO: roomDB 삭제 진행
+                    // roomDB 삭제 진행
+                    deleteIngredient()
                     dismiss()
                 })
             .setNegativeButton("취소",
