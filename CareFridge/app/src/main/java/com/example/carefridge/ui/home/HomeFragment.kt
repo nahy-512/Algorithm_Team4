@@ -54,11 +54,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
             Thread{
                 // recipes가 비어있다면 더미데이터를 넣어줌
                 db.recipeDao().apply {
-                    insert(Recipe("스파게티", listOf("면" to 100, "고기" to 100, "채소" to 100, "소스" to 50)))
-                    insert(Recipe("비빔밥", listOf("밥" to 100, "고기" to 100, "채소" to 100, "소스" to 50)))
-                    insert(Recipe("짜장면", listOf("면" to 150, "고기" to 50, "채소" to 50, "소스" to 30)))
-                    insert(Recipe("스테이크", listOf("소고기" to 200, "채소" to 50, "소스" to 30)))
-                    insert(Recipe("샌드위치", listOf("빵" to 100, "고기" to 50, "채소" to 80)))
+                    insert(Recipe(0, "스파게티", listOf("면" to 100, "고기" to 100, "채소" to 100, "소스" to 50)))
+                    insert(Recipe(0, "비빔밥", listOf("밥" to 100, "고기" to 100, "채소" to 100, "소스" to 50)))
+                    insert(Recipe(0, "짜장면", listOf("면" to 150, "고기" to 50, "채소" to 50, "소스" to 30)))
+                    insert(Recipe(0, "스테이크", listOf("소고기" to 200, "채소" to 50, "소스" to 30)))
+                    insert(Recipe(0, "샌드위치", listOf("빵" to 100, "고기" to 50, "채소" to 80)))
                 }
 
                 // 데이터가 잘 들어왔는지 확인

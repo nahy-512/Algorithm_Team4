@@ -11,6 +11,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.example.carefridge.R
 import com.example.carefridge.algorithm.MenuRecommendAlgorithm
@@ -18,8 +19,10 @@ import com.example.carefridge.data.FridgeDatabase
 import com.example.carefridge.data.entities.Ingredient
 import com.example.carefridge.data.entities.Recipe
 import com.example.carefridge.databinding.DialogRecommendMenuBinding
-import java.util.Timer
-import java.util.TimerTask
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class RecommendMenuDialog : DialogFragment() {
@@ -39,6 +42,7 @@ class RecommendMenuDialog : DialogFragment() {
 
     private val handler = Handler()
     private val delay = 150L // 0.15초
+    private val lifecycleScope = CoroutineScope(Dispatchers.Default)
 
     // 추천 결과
     private var recommendMenu: String? = null
@@ -87,21 +91,46 @@ class RecommendMenuDialog : DialogFragment() {
 
         // 다시 추천 받기
         binding.dialogRecommendMenuRetryIv.setOnClickListener {
-            //TODO: 메뉴 추천 재진행
-            dismiss()
+            // 메뉴 추천 재진행
+            retryRecommendMenu()
         }
 
         // 만들어 먹기
         binding.dialogRecommendMenuTryBtn.setOnClickListener {
-            //TODO: 추천 받은 메뉴 비활성화
+            // 메뉴를 선정했으므로, 추천 여부 상태를 이전으로 되돌림
+            db.recipeDao().resetRecommendStatus()
+            //TODO: 재료 그램수 업데이트
             dismiss()
         }
     }
 
     private fun getRecommendMenu() {
         recommendMenu = MenuRecommendAlgorithm.main(getIngredients(), recipes, getUserPreferIngredients())
-        // 메뉴 세팅
-        recommendMenuId = findRecipeIdByName(recommendMenu)
+        Log.d("RecommendDialog", recommendMenu.toString())
+        if (recommendMenu != null) {
+            // 메뉴 세팅
+            recommendMenuId = findRecipeIdByName(recommendMenu)
+        } else {
+            setRecommendDoneView()
+        }
+    }
+
+    private fun retryRecommendMenu() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            if (recipes.isNotEmpty()) {
+                // db에서 추천 여부 비활성화
+                db.recipeDao().updateIsRecommendTargetById(recommendMenuId!!, false)
+
+                // 비활성화가 완료된 후에 레시피 다시 조회 (이전에 추천한 메뉴를 제외하고 다시 추천)
+                withContext(Dispatchers.Main) {
+                    getRecipes()
+                    // 추천 목록을 다시 가져옴
+                    getRecommendMenu()
+                    // 결과 나오는 동안 애니메이션
+                    changeMenuImg()
+                }
+            }
+        }
     }
 
     private fun findRecipeIdByName(menuName: String?): Int? {
@@ -122,13 +151,22 @@ class RecommendMenuDialog : DialogFragment() {
             binding.dialogRecommendMenuNameTv.text = it.name
         }
         handler.postDelayed({
-            binding.dialogRecommendMenuTitleTv.text = getString(R.string.dialog_recommend_menu_title)
-            binding.dialogRecommendMenuLoadingTv.visibility = View.GONE
+            setRecommendDoneView()
+        }, 1000)
+        //        handler.removeCallbacksAndMessages(null)
+
+//        // db에서 추천 여부 비활성화
+//        setRecommendMenuInactivate(recommendMenuId!!)
+    }
+
+    private fun setRecommendDoneView() {
+        with (binding) {
+            dialogRecommendMenuTitleTv.text = getString(R.string.dialog_recommend_menu_title)
+            dialogRecommendMenuLoadingTv.visibility = View.GONE
             // 버튼 보여주기
-            binding.dialogRecommendMenuTryBtn.visibility = View.VISIBLE
-            binding.dialogRecommendMenuRetryIv.visibility = View.VISIBLE
-        }, 500)
-//        handler.removeCallbacksAndMessages(null)
+            dialogRecommendMenuTryBtn.visibility = View.VISIBLE
+            dialogRecommendMenuRetryIv.visibility = View.VISIBLE
+        }
     }
 
     private fun getIngredients(): List<Ingredient> {
@@ -136,7 +174,19 @@ class RecommendMenuDialog : DialogFragment() {
     }
 
     private fun getRecipes() {
-        recipes = db.recipeDao().getRecipes() as ArrayList<Recipe>
+        // 추천할 목록
+        recipes = db.recipeDao().getRecommendTargetRecipes(true) as ArrayList<Recipe>
+        if (recipes.isEmpty()) {
+            Toast.makeText(requireContext(), "추천할 수 있는 메뉴가 없습니다!\n추천 메뉴를 초기화합니다.", Toast.LENGTH_SHORT).show()
+
+            lifecycleScope.launch(Dispatchers.IO) {
+                db.recipeDao().resetRecommendStatus()
+                withContext(Dispatchers.Main) {
+                    recipes = db.recipeDao().getRecommendTargetRecipes(true) as ArrayList<Recipe>
+                    binding.dialogRecommendMenuRetryIv.visibility = View.VISIBLE
+                }
+            }
+        }
     }
 
     private fun getUserPreferIngredients(): List<String> {
