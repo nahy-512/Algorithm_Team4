@@ -19,7 +19,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="30dp"
+        android:layout_marginHorizontal="20dp"
         android:padding="20dp"
         android:orientation="vertical"
         android:gravity="center"
@@ -29,19 +29,42 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintVertical_bias="0.4">
 
-        <TextView
-            android:id="@+id/home_desc_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="오늘_뭐_먹지? 🤔"
-            android:textColor="@color/dark_gray"
-            android:textSize="22sp"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/home_thinking_cl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/home_thinking_iv"
+                android:layout_width="300dp"
+                android:layout_height="0dp"
+                android:src="@drawable/ic_think_bubble"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/home_thinking_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:text="오늘_뭐_먹지? 🤔"
+                android:textColor="@color/dark_gray"
+                android:textSize="22sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/home_thinking_iv"
+                app:layout_constraintBottom_toBottomOf="@id/home_thinking_iv"
+                app:layout_constraintVertical_bias="0.42"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/home_recommend_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:paddingVertical="4dp"
             android:text="👉🏻 냉장고에 있는 재료로 메뉴 추천 받으러 가기!"
             style="@style/dialog_add_btn"/>
 

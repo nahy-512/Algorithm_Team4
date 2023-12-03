@@ -1,5 +1,7 @@
 package com.example.carefridge.ui.home
 
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -21,8 +23,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     override fun onStart() {
         super.onStart()
 
+        setRotateAnimation()
         setBlinkAnimation()
         setInitialRecipes()
+    }
+
+    private fun setRotateAnimation() {
+        val animatorRotate: ValueAnimator = ObjectAnimator
+            .ofFloat(binding.homeThinkingCl, "rotation", 100f, 0f, 360f)
+
+        animatorRotate.duration = 1000
+        animatorRotate.start()
     }
 
     private fun setBlinkAnimation() {
