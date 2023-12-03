@@ -24,7 +24,7 @@ class RecommendMenuDialog : DialogFragment() {
     private lateinit var menuImgList: TypedArray
     private lateinit var menuNameList: Array<String>
 
-    private var currentImageIndex = 0
+    private var currentmenuIndex = 0
     private val handler = Handler()
     private val delay = 200L // 0.3초
 
@@ -101,12 +101,12 @@ class RecommendMenuDialog : DialogFragment() {
             override fun onAnimationStart(animation: Animation?) {}
 
             override fun onAnimationEnd(animation: Animation?) {
-                currentImageIndex = (currentImageIndex + 1) % 5
+                currentmenuIndex = (currentmenuIndex + 1) % menuNameList.size
                 // 이미지 교체
-                menuIv.setImageResource(menuImgList.getResourceId(currentImageIndex, -1))
+                menuIv.setImageResource(menuImgList.getResourceId(currentmenuIndex, -1))
                 menuIv.startAnimation(fadeInAnimation)
                 // 텍스트 교체
-                menuTv.text = menuNameList[currentImageIndex]
+                menuTv.text = menuNameList[currentmenuIndex]
                 menuIv.startAnimation(fadeInAnimation)
             }
 

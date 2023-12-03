@@ -67,7 +67,7 @@ class IngredientRVAdapter(
             binding.itemIngredientAmountTv.text = context.getString(R.string.item_ingredient_amount_tv, item.amount)
             binding.itemIngredientExpireDateTv.text = item.getFormattedExpirationDate()
 
-            val dDay = calculateDDay(item.daysToExpiration)
+            val dDay = calculateDDay(item.expirationDate)
 
             if (dDay == 0) { // 디데이
                 binding.itemIngredientDDayTv.text = context.getString(R.string.item_ingredient_dDay)

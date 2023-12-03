@@ -1,13 +1,16 @@
 package com.example.carefridge.data
 
 import androidx.room.TypeConverter
-import com.example.carefridge.data.entities.Ingredient
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class IngredientListConverter {
     @TypeConverter
-    fun listToJson(value: List<Ingredient>?): String = Gson().toJson(value)
+    fun listToJson(value: List<Pair<String, Int>>?): String = Gson().toJson(value)
 
     @TypeConverter
-    fun jsonToList(value: String?) = Gson().fromJson(value, Array<Ingredient?>::class.java).toList()
+    fun jsonToList(value: String?): List<Pair<String, Int>> {
+        val listType = object : TypeToken<List<Pair<String, Int>>>() {}.type
+        return Gson().fromJson(value, listType)
+    }
 }
