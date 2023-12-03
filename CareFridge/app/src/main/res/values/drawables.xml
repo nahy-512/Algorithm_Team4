@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="menu_img_arr">
+        <item name="spaghetti">@drawable/ic_menu_spaghetti</item>
+        <item name="bibimbap">@drawable/ic_menu_bibimbap</item>
+        <item name="jajangmyeon">@drawable/ic_menu_jajangmyeon</item>
+        <item name="steak">@drawable/ic_menu_steak</item>
+        <item name="sandwich">@drawable/ic_menu_sandwich</item>
+    </array>
+</resources>

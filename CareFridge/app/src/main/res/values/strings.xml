@@ -27,4 +27,13 @@
     <string name="dialog_recommend_menu_title">메뉴 추천 받기</string>
     <string name="dialog_recommend_menu_again">다시 추천 받기</string>
     <string name="dialog_recommend_menu_try">만들어 먹기</string>
+
+    <!-- 메뉴 이름 -->
+    <string-array name="menu_name_arr">
+        <item name="spaghetti">스파게티</item>
+        <item name="bibimbap">비빔밥</item>
+        <item name="jajangmyeon">짜장면</item>
+        <item name="steak">스테이크</item>
+        <item name="sandwich">샌드위치</item>
+    </string-array>
 </resources>
