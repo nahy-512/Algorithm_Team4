@@ -1,9 +1,7 @@
 package com.example.carefridge.ui
 
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.example.carefridge.R
 import com.example.carefridge.databinding.ActivityMainBinding
@@ -27,7 +25,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 //        testMenuRecommendAlgorithm()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun testMenuRecommendAlgorithm() {
         // 메뉴 추천 알고리즘 테스트
 //        MenuRecommendAlgorithm.main()

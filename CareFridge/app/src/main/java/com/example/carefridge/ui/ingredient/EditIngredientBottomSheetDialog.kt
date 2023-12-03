@@ -1,25 +1,29 @@
 package com.example.carefridge.ui.ingredient
 
+import android.app.DatePickerDialog
 import android.content.DialogInterface
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.DatePicker
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import com.example.carefridge.R
 import com.example.carefridge.data.entities.Ingredient
 import com.example.carefridge.databinding.DialogEditIngredientBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import java.util.Calendar
 
-class EditIngredientBottomSheetDialog(val ingredient: Ingredient): BottomSheetDialogFragment() {
+class EditIngredientBottomSheetDialog(val ingredient: Ingredient): BottomSheetDialogFragment(), DatePickerDialog.OnDateSetListener {
 
     private lateinit var binding: DialogEditIngredientBinding
-    val JUMPING_RATE = 50
 
+    val JUMPING_RATE = 50
+    private var selectedDate: Calendar? = null
+
+    private var expirationDate: Long = 0L // 유통기한
     private var amount: Int = 0 // 양
     var isPrefer: Boolean = false   // 선호 여부
 
@@ -43,18 +47,16 @@ class EditIngredientBottomSheetDialog(val ingredient: Ingredient): BottomSheetDi
         Log.d("EditDialog", "onDismiss()")
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun setInit() {
         amount = ingredient.amount
         isPrefer = ingredient.isPrefer
-
-        val expirationDate = ingredient.getFormattedExpirationDate()
+        expirationDate = ingredient.expirationDate
 
         with(binding){
             // 재료 이름
             dialogEditIngredientNameEt.setText(ingredient.name)
             // 유통기한
-            dialogEditIngredientExpirationDateEt.setText(expirationDate)
+            dialogEditIngredientExpirationDateEt.setText(ingredient.getFormattedExpirationDate())
             // 양
             binding.dialogEditIngredientAmountTv.text = amount.toString()
             // 첫 진입 시 토글 이미지 세팅
@@ -91,6 +93,11 @@ class EditIngredientBottomSheetDialog(val ingredient: Ingredient): BottomSheetDi
             dismiss()
         }
 
+        // 유통기한
+        binding.dialogEditIngredientExpirationDateEt.setOnClickListener {
+            showExpirationDatePicker()
+        }
+
         // 양 감소
         binding.dialogEditIngredientAmountMinusIv.setOnClickListener {
             if (!canUpdateAmount()) {
@@ -105,6 +112,56 @@ class EditIngredientBottomSheetDialog(val ingredient: Ingredient): BottomSheetDi
             updateAmount(+1)
         }
     }
+
+    private fun showExpirationDatePicker() {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        // 달력 만들기
+        val datePickerDialog = DatePickerDialog(requireContext(), this, year, month, day)
+        // 이미 선택된 날짜 설정
+        if (expirationDate != 0L) {
+            val selectedCalendar = Calendar.getInstance()
+            selectedCalendar.timeInMillis = expirationDate
+
+            // 오늘 이전 날짜도 처리
+            if (selectedCalendar.get(Calendar.YEAR) > 0) {
+                datePickerDialog.updateDate(
+                    selectedCalendar.get(Calendar.YEAR),
+                    selectedCalendar.get(Calendar.MONTH),
+                    selectedCalendar.get(Calendar.DAY_OF_MONTH)
+                )
+            }
+        }
+        // 다이얼로그 띄우기
+        datePickerDialog.show()
+    }
+
+    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+        selectedDate = Calendar.getInstance()
+        selectedDate?.set(Calendar.YEAR, year)
+        selectedDate?.set(Calendar.MONTH, month)
+        selectedDate?.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+
+        // Calendar를 Long으로 변환
+        expirationDate = selectedDate?.timeInMillis!!
+
+        // 포맷된 날짜를 얻기 위해 함수 호출
+        ingredient.expirationDate = expirationDate
+        val formattedDate = ingredient.getFormattedExpirationDate()
+
+        // 유통기한 텍스트 업데이트
+        updateExpirationDateText(formattedDate)
+    }
+
+    private fun updateExpirationDateText(formattedDate: String) {
+        // 유통기한 텍스트 업데이트
+        binding.dialogEditIngredientExpirationDateEt.setText(formattedDate)
+        Log.d("AddDialog/Date", "formattedDate: $formattedDate")
+    }
+
 
     private fun updateAmount(direct: Int) {
         amount += direct * JUMPING_RATE

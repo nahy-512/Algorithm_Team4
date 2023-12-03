@@ -1,7 +1,5 @@
 package com.example.carefridge.data.entities
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.Duration
@@ -14,13 +12,12 @@ import java.time.format.DateTimeFormatter
 data class Ingredient(
    val name: String = "",
    val amount: Int = 50,
-   val expirationDate: Long = System.currentTimeMillis(),
+   var expirationDate: Long = System.currentTimeMillis(),
    val isPrefer: Boolean = false
 ) {
    @PrimaryKey(autoGenerate = true) var id: Int = 0
 
    // 함수를 통해 daysToExpiration을 원하는 형식으로 변환
-   @RequiresApi(Build.VERSION_CODES.O)
    fun getFormattedExpirationDate(): String {
       val instant = Instant.ofEpochMilli(expirationDate)
       val expirationDate = LocalDateTime.ofInstant(instant, ZoneId.systemDefault())
@@ -29,7 +26,6 @@ data class Ingredient(
       return expirationDate.format(formatter)
    }
 
-   @RequiresApi(Build.VERSION_CODES.O)
    fun getDaysToExpiration(expirationDate: Long): Int {
       val koreaZoneId = ZoneId.of("Asia/Seoul")
       // 현재 시간
