@@ -1,8 +1,10 @@
 package com.example.carefridge.ui.ingredient
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import com.example.carefridge.R
 import com.example.carefridge.data.FridgeDatabase
@@ -10,6 +12,8 @@ import com.example.carefridge.data.entities.Ingredient
 import com.example.carefridge.databinding.FragmentIngredientBinding
 import com.example.carefridge.ui.ingredient.adapter.IngredientRVAdapter
 import com.quintable.jpower.config.BaseFragment
+import java.time.LocalDateTime
+import java.time.ZoneId
 
 class IngredientFragment : BaseFragment<FragmentIngredientBinding>(FragmentIngredientBinding::bind, R.layout.fragment_ingredient) {
 
@@ -32,6 +36,7 @@ class IngredientFragment : BaseFragment<FragmentIngredientBinding>(FragmentIngre
         initIngredientRV()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun inputDummyIngredients() {
         // DB의 재료 정보를 불러옴
         ingredients = db.ingredientDao().getIngredients() as ArrayList<Ingredient>
@@ -43,12 +48,12 @@ class IngredientFragment : BaseFragment<FragmentIngredientBinding>(FragmentIngre
             Thread{
                 // ingredients가 비어있다면 더미데이터를 넣어줌
                 db.ingredientDao().apply {
-                    insert(Ingredient("고기", 500))
-                    insert(Ingredient("채소", 400))
-                    insert(Ingredient("밥", 500))
-                    insert(Ingredient("면", 500, isPrefer = true))
+                    insert(Ingredient("고기", 500, getExpirationDateAfterDays(-3)))
+                    insert(Ingredient("채소", 400, getExpirationDateAfterDays(7)))
+                    insert(Ingredient("밥", 500, getExpirationDateAfterDays(4)))
+                    insert(Ingredient("면", 500, getExpirationDateAfterDays(22), isPrefer = true))
                     insert(Ingredient("빵", 400, isPrefer = true))
-                    insert(Ingredient("소고기", 200))
+                    insert(Ingredient("소고기", 200, getExpirationDateAfterDays(2)))
                 }
                 // 추가했다면 다시 데이터를 ingredients에 넣어줌
                 ingredients = db.ingredientDao().getIngredients() as ArrayList<Ingredient>
@@ -98,5 +103,13 @@ class IngredientFragment : BaseFragment<FragmentIngredientBinding>(FragmentIngre
         val dialog = EditIngredientBottomSheetDialog(ingredient)
 
         dialog.show(requireActivity().supportFragmentManager, dialog.tag)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getExpirationDateAfterDays(daysToAdd: Long): Long {
+        val currentDateTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"))
+        val expirationDateTime = currentDateTime.plusDays(daysToAdd)
+        // 현재 날짜를 기준으로 인자로 들어온 daysToAdd를 더한 유통기한을 반환
+        return expirationDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
     }
 }

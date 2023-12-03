@@ -12,4 +12,6 @@
     <color name="dark_gray">#5E5F60</color>
     <color name="gray">#F9F9F9</color>
     <color name="placeholder">#BBBBBB</color>
+
+    <color name="red">#D12E2E</color>
 </resources>
