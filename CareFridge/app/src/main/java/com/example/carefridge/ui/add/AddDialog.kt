@@ -3,7 +3,6 @@ package com.example.carefridge.ui.add
 import android.app.DatePickerDialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,30 +10,29 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import com.example.carefridge.R
+import com.example.carefridge.data.FridgeDatabase
+import com.example.carefridge.data.entities.Ingredient
 import com.example.carefridge.databinding.DialogAddBinding
-import java.text.SimpleDateFormat
+import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-interface AddDialogInterface {
-    fun onClickYesButton()
-}
-
-class AddDialog(
-    private val confirmDialogInterface: AddDialogInterface,
-) : DialogFragment(), DatePickerDialog.OnDateSetListener {
+class AddDialog: DialogFragment(), DatePickerDialog.OnDateSetListener {
 
     // 뷰 바인딩 정의
     private var _binding: DialogAddBinding? = null
     private val binding get() = _binding!!
     val JUMPING_RATE = 50
 
+    private lateinit var db: FridgeDatabase
+
+    private var expirationDate: Long = 0L
     private var amount = 150 // 초기값
+    var isPrefer: Boolean = false   // 선호 여부
     private var selectedDate: Calendar? = null
 
     override fun onCreateView(
@@ -44,6 +42,8 @@ class AddDialog(
     ): View {
         _binding = DialogAddBinding.inflate(inflater, container, false)
         val view = binding.root
+
+        db = FridgeDatabase.getInstance(requireContext())!!
 
         setInit()
         initClickListener()
@@ -68,6 +68,8 @@ class AddDialog(
 
         // 초기 양 세팅
         binding.dialogAddAmountTv.text = getString(R.string.dialog_add_ingredient_amount_et, amount)
+        // 유통기한 힌트 세팅 -> 오늘
+        binding.dialogAddExpirationDateEt.hint = getFormattedExpirationDate(System.currentTimeMillis())
     }
 
     private fun initClickListener() {
@@ -78,8 +80,8 @@ class AddDialog(
 
         // 확인 버튼 클릭
         binding.dialogYesBtn.setOnClickListener {
-            this.confirmDialogInterface.onClickYesButton()
-            dismiss()
+            // roomDB에 재료 추가
+            insertIngredient()
         }
 
         // 유통 기한 선택
@@ -102,6 +104,29 @@ class AddDialog(
 
     }
 
+    private fun insertIngredient() {
+        val name = binding.dialogAddNameEt.text.toString()
+
+        val ingredient = Ingredient(name, amount, expirationDate, binding.dialogAddPreferToggleBtn.isChecked)
+        Log.d("AddDialog", "ingredient: $ingredient")
+
+        // 조건 확인
+        if (name.isEmpty() || expirationDate == 0L) {
+            Toast.makeText(requireContext(), "값을 모두 추가해 주세요.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        Thread{
+            // roomDB에 추가
+            db.ingredientDao().insert(ingredient)
+        }.start()
+
+        Toast.makeText(requireContext(), "재료가 리스트에 추가되었습니다.", Toast.LENGTH_SHORT).show()
+
+        // 종료
+        dismiss()
+    }
+
     private fun showExpirationDatePicker() {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
@@ -116,27 +141,34 @@ class AddDialog(
         datePickerDialog.show()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         selectedDate = Calendar.getInstance()
         selectedDate?.set(Calendar.YEAR, year)
         selectedDate?.set(Calendar.MONTH, month)
         selectedDate?.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
-        // Calendar -> LocalDateTime 변환
-        val localDateTime = selectedDate?.toInstant()?.atZone(ZoneId.systemDefault())?.toLocalDateTime()
+        // Calendar를 Long으로 변환
+        expirationDate = selectedDate?.timeInMillis!!
 
-        updateExpirationDateText(localDateTime)
+        // 포맷된 날짜를 얻기 위해 함수 호출
+        val formattedDate = getFormattedExpirationDate(expirationDate)
+
+        // 유통기한 텍스트 업데이트
+        updateExpirationDateText(formattedDate)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun updateExpirationDateText(localDateTime: LocalDateTime?) {
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.getDefault())
-        val formattedDate = localDateTime?.format(formatter)
-
-        // 받아온 날짜로 유통기한 텍스트 세팅
+    private fun updateExpirationDateText(formattedDate: String) {
+        // 유통기한 텍스트 업데이트
         binding.dialogAddExpirationDateEt.setText(formattedDate)
-        Log.d("AddDialog/Date", "localDateTime: ${localDateTime}, formattedDate: $formattedDate")
+        Log.d("AddDialog/Date", "formattedDate: $formattedDate")
+    }
+
+    fun getFormattedExpirationDate(longDate: Long): String {
+        val instant = Instant.ofEpochMilli(longDate)
+        val expirationDate = LocalDateTime.ofInstant(instant, ZoneId.systemDefault())
+
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        return expirationDate.format(formatter)
     }
 
     private fun updateAmount(direct: Int) {

@@ -16,7 +16,7 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">8</item>
-        <item name="android:paddingVertical">8dp</item>
+        <item name="android:paddingVertical">10dp</item>
         <item name="android:paddingHorizontal">16dp</item>
         <item name="android:background">@drawable/bg_round_all_btn</item>
         <item name="android:backgroundTint">@color/white</item>
@@ -29,7 +29,7 @@
     <style name="dialog_add_input_tv">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">2</item>
+        <item name="android:layout_weight">2.8</item>
         <item name="fontFamily">@font/bmjua</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/dark_gray</item>

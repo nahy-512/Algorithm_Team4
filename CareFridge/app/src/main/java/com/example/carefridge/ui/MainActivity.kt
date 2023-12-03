@@ -6,15 +6,13 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.example.carefridge.R
-import com.example.carefridge.algorithm.MenuRecommendAlgorithm
 import com.example.carefridge.databinding.ActivityMainBinding
 import com.example.carefridge.ui.add.AddDialog
-import com.example.carefridge.ui.add.AddDialogInterface
 import com.example.carefridge.ui.home.HomeFragment
 import com.example.carefridge.ui.ingredient.IngredientFragment
 import com.quintable.jpower.config.BaseActivity
 
-class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate), AddDialogInterface {
+class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
 
     private val manager = supportFragmentManager
 
@@ -43,7 +41,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
     private fun showAddDialog() {
         binding.mainFloatingAddBtn.setOnClickListener {
-            val dialog = AddDialog(this)
+            val dialog = AddDialog()
             // 알림창이 띄워져있는 동안 배경 클릭 막기
             dialog.isCancelable = false
             dialog.show(this.supportFragmentManager, "AddDialog")
@@ -77,9 +75,5 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
     private fun Fragment.changeFragment() {
         manager.beginTransaction().replace(R.id.main_frm, this).commitAllowingStateLoss()
-    }
-
-    override fun onClickYesButton() {
-        //TODO: RoomDB에 재료 추가 진행
     }
 }
