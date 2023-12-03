@@ -107,7 +107,7 @@ class AddDialog: DialogFragment(), DatePickerDialog.OnDateSetListener {
     private fun insertIngredient() {
         val name = binding.dialogAddNameEt.text.toString()
 
-        val ingredient = Ingredient(name, amount, expirationDate, binding.dialogAddPreferToggleBtn.isChecked)
+        val ingredient = Ingredient(0, name, amount, expirationDate, binding.dialogAddPreferToggleBtn.isChecked)
         Log.d("AddDialog", "ingredient: $ingredient")
 
         // 조건 확인

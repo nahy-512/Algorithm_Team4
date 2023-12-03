@@ -11,16 +11,20 @@ import android.widget.DatePicker
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.carefridge.R
+import com.example.carefridge.data.FridgeDatabase
 import com.example.carefridge.data.entities.Ingredient
 import com.example.carefridge.databinding.DialogEditIngredientBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.util.Calendar
 
-class EditIngredientBottomSheetDialog(val ingredient: Ingredient): BottomSheetDialogFragment(), DatePickerDialog.OnDateSetListener {
+class EditIngredientBottomSheetDialog(var ingredient: Ingredient): BottomSheetDialogFragment(), DatePickerDialog.OnDateSetListener {
 
     private lateinit var binding: DialogEditIngredientBinding
 
     val JUMPING_RATE = 50
+
+    private lateinit var db: FridgeDatabase
+
     private var selectedDate: Calendar? = null
 
     private var expirationDate: Long = 0L // 유통기한
@@ -35,9 +39,10 @@ class EditIngredientBottomSheetDialog(val ingredient: Ingredient): BottomSheetDi
 
         binding = DialogEditIngredientBinding.inflate(inflater, container, false)
 
+        db = FridgeDatabase.getInstance(requireContext())!!
+
         setInit()
         initClickListener()
-        switchToggle()
 
         return binding.root
     }
@@ -64,16 +69,6 @@ class EditIngredientBottomSheetDialog(val ingredient: Ingredient): BottomSheetDi
         }
     }
 
-
-    private fun switchToggle() {
-        val toggle = binding.dialogEditIngredientPreferToggleBtn
-        // 토글 클릭 시 이미지 세팅
-        toggle.setOnClickListener {
-            toggle.isChecked = !isPrefer
-            isPrefer = !isPrefer
-        }
-    }
-
     private fun initClickListener() {
         // X 버튼 눌러서 내리기
         binding.dialogEditIngredientCloseIv.setOnClickListener {
@@ -86,11 +81,10 @@ class EditIngredientBottomSheetDialog(val ingredient: Ingredient): BottomSheetDi
             showDeleteAlertDialog()
         }
 
-
         // 편집
         binding.dialogEditIngredientDoneBtn.setOnClickListener {
-            //TODO: roomDB 편집 진행
-            dismiss()
+            // roomDB에 재료 정보 엄데이트
+            updateIngredient()
         }
 
         // 유통기한
@@ -111,6 +105,35 @@ class EditIngredientBottomSheetDialog(val ingredient: Ingredient): BottomSheetDi
         binding.dialogEditIngredientAmountPlusIv.setOnClickListener {
             updateAmount(+1)
         }
+    }
+
+    private fun updateIngredient() {
+        val name = binding.dialogEditIngredientNameEt.text.toString()
+
+        ingredient = Ingredient(ingredient.id, name, amount, expirationDate, binding.dialogEditIngredientPreferToggleBtn.isChecked)
+        Log.d("EditDialog", "ingredient: $ingredient")
+
+        // 조건 확인
+        if (name.isEmpty() || expirationDate == 0L) {
+            Toast.makeText(requireContext(), "값을 모두 추가해 주세요.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val thread = Thread{
+            // roomDB에 추가
+            db.ingredientDao().update(ingredient)
+        }
+        thread.start()
+        try {
+            thread.join()
+        } catch (e : InterruptedException) {
+            e.printStackTrace()
+        }
+
+        Toast.makeText(requireContext(), "재료의 정보가 수정되었습니다.", Toast.LENGTH_SHORT).show()
+
+        // 종료
+        dismiss()
     }
 
     private fun showExpirationDatePicker() {
@@ -159,7 +182,7 @@ class EditIngredientBottomSheetDialog(val ingredient: Ingredient): BottomSheetDi
     private fun updateExpirationDateText(formattedDate: String) {
         // 유통기한 텍스트 업데이트
         binding.dialogEditIngredientExpirationDateEt.setText(formattedDate)
-        Log.d("AddDialog/Date", "formattedDate: $formattedDate")
+        Log.d("EditDialog/Date", "formattedDate: $formattedDate")
     }
 
 

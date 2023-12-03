@@ -10,13 +10,12 @@ import java.time.format.DateTimeFormatter
 
 @Entity(tableName = "IngredientTable")
 data class Ingredient(
+   @PrimaryKey(autoGenerate = true) var id: Int = 0,
    val name: String = "",
    val amount: Int = 50,
    var expirationDate: Long = System.currentTimeMillis(),
    val isPrefer: Boolean = false
 ) {
-   @PrimaryKey(autoGenerate = true) var id: Int = 0
-
    // 함수를 통해 daysToExpiration을 원하는 형식으로 변환
    fun getFormattedExpirationDate(): String {
       val instant = Instant.ofEpochMilli(expirationDate)

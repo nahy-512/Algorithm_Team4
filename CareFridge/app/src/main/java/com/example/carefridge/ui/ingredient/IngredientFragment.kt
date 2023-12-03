@@ -36,7 +36,13 @@ class IngredientFragment : BaseFragment<FragmentIngredientBinding>(FragmentIngre
         initIngredientRV()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onResume() {
+        super.onResume()
+
+        ingredients = db.ingredientDao().getIngredients() as ArrayList<Ingredient>
+        initIngredientRV()
+    }
+
     private fun inputDummyIngredients() {
         // DB의 재료 정보를 불러옴
         ingredients = db.ingredientDao().getIngredients() as ArrayList<Ingredient>
@@ -48,12 +54,12 @@ class IngredientFragment : BaseFragment<FragmentIngredientBinding>(FragmentIngre
             Thread{
                 // ingredients가 비어있다면 더미데이터를 넣어줌
                 db.ingredientDao().apply {
-                    insert(Ingredient("고기", 500, getExpirationDateAfterDays(5), false))
-                    insert(Ingredient("채소", 400, getExpirationDateAfterDays(3)))
-                    insert(Ingredient("밥", 500, getExpirationDateAfterDays(10), true))
-                    insert(Ingredient("면", 500, getExpirationDateAfterDays(11), isPrefer = false))
-                    insert(Ingredient("빵", 400, getExpirationDateAfterDays(2), isPrefer = false))
-                    insert(Ingredient("소고기", 200, getExpirationDateAfterDays(3)))
+                    insert(Ingredient(0, "고기", 500, getExpirationDateAfterDays(5), false))
+                    insert(Ingredient(0, "채소", 400, getExpirationDateAfterDays(3)))
+                    insert(Ingredient(0, "밥", 500, getExpirationDateAfterDays(10), true))
+                    insert(Ingredient(0, "면", 500, getExpirationDateAfterDays(11), isPrefer = false))
+                    insert(Ingredient(0, "빵", 400, getExpirationDateAfterDays(2), isPrefer = false))
+                    insert(Ingredient(0, "소고기", 200, getExpirationDateAfterDays(3)))
                 }
                 // 추가했다면 다시 데이터를 ingredients에 넣어줌
                 ingredients = db.ingredientDao().getIngredients() as ArrayList<Ingredient>
@@ -105,7 +111,6 @@ class IngredientFragment : BaseFragment<FragmentIngredientBinding>(FragmentIngre
         dialog.show(requireActivity().supportFragmentManager, dialog.tag)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun getExpirationDateAfterDays(daysToAdd: Long): Long {
         val currentDateTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"))
         val expirationDateTime = currentDateTime.plusDays(daysToAdd)
