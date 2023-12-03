@@ -24,7 +24,8 @@
     <string name="item_ingredient_dDay">D-Day</string>
 
     <!-- 메뉴 추천 화면 -->
-    <string name="dialog_recommend_menu_title">메뉴 추천 받기</string>
+    <string name="dialog_recommend_menu_title">메뉴 추천 완료!</string>
+    <string name="dialog_recommend_menu_loading">메뉴 추천중</string>
     <string name="dialog_recommend_menu_again">다시 추천 받기</string>
     <string name="dialog_recommend_menu_try">만들어 먹기</string>
 

@@ -35,8 +35,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     private fun showRecommendMenuDialog() {
         binding.homeRecommendBtn.setOnClickListener {
             val dialog = RecommendMenuDialog()
-            // 알림창이 띄워져있는 동안 배경 클릭 막기
-            dialog.isCancelable = false
+            // 알림창이 띄워져있는 동안 배경 클릭 허용
+            dialog.isCancelable = true
             dialog.show(this.requireFragmentManager(), "AddDialog")
         }
     }

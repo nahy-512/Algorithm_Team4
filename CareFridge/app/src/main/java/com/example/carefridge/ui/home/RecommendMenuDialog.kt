@@ -18,6 +18,8 @@ import com.example.carefridge.data.FridgeDatabase
 import com.example.carefridge.data.entities.Ingredient
 import com.example.carefridge.data.entities.Recipe
 import com.example.carefridge.databinding.DialogRecommendMenuBinding
+import java.util.Timer
+import java.util.TimerTask
 
 
 class RecommendMenuDialog : DialogFragment() {
@@ -34,8 +36,9 @@ class RecommendMenuDialog : DialogFragment() {
     private var recipes = arrayListOf<Recipe>()
 
     private var currentMenuIndex = 0
+
     private val handler = Handler()
-    private val delay = 200L // 0.2초
+    private val delay = 150L // 0.15초
 
     // 추천 결과
     private var recommendMenu: String? = null
@@ -82,13 +85,8 @@ class RecommendMenuDialog : DialogFragment() {
 
     private fun initClickListener() {
 
-        // 닫기
-        binding.dialogRecommendMenuCloseIv.setOnClickListener {
-            dismiss()
-        }
-
         // 다시 추천 받기
-        binding.dialogRecommendMenuAgainBtn.setOnClickListener {
+        binding.dialogRecommendMenuRetryIv.setOnClickListener {
             //TODO: 메뉴 추천 재진행
             dismiss()
         }
@@ -120,9 +118,17 @@ class RecommendMenuDialog : DialogFragment() {
         val recommendedRecipe = db.recipeDao().getRecipeById(recommendMenuId!!)
         recommendedRecipe?.let {
             // 이미지와 이름을 업데이트
-            binding.dialogRecommendMenuIv.setImageResource(menuImgList.getResourceId(currentMenuIndex, -1))
+            binding.dialogRecommendMenuIv.setImageResource(menuImgList.getResourceId(it.id - 1, -1))
             binding.dialogRecommendMenuNameTv.text = it.name
         }
+        handler.postDelayed({
+            binding.dialogRecommendMenuTitleTv.text = getString(R.string.dialog_recommend_menu_title)
+            binding.dialogRecommendMenuLoadingTv.visibility = View.GONE
+            // 버튼 보여주기
+            binding.dialogRecommendMenuTryBtn.visibility = View.VISIBLE
+            binding.dialogRecommendMenuRetryIv.visibility = View.VISIBLE
+        }, 500)
+//        handler.removeCallbacksAndMessages(null)
     }
 
     private fun getIngredients(): List<Ingredient> {
@@ -141,6 +147,11 @@ class RecommendMenuDialog : DialogFragment() {
     }
 
     private fun changeMenuImg() {
+        binding.dialogRecommendMenuTitleTv.text = "메뉴 추천중"
+        binding.dialogRecommendMenuLoadingTv.visibility = View.VISIBLE
+        binding.dialogRecommendMenuTryBtn.visibility = View.GONE
+        binding.dialogRecommendMenuRetryIv.visibility = View.GONE
+
         // 일정 간격으로 이미지를 교체하는 Runnable을 실행
         handler.postDelayed(object : Runnable {
             override fun run() {
@@ -150,10 +161,11 @@ class RecommendMenuDialog : DialogFragment() {
         }, delay)
     }
 
-
     private fun changeMenuWithAnimation(menuIv: ImageView, menuTv: TextView) {
         val fadeInAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in)
         val fadeOutAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_out)
+
+        var cnt = 0
 
         menuIv.startAnimation(fadeOutAnimation)
         menuTv.startAnimation(fadeOutAnimation)
@@ -162,6 +174,10 @@ class RecommendMenuDialog : DialogFragment() {
             override fun onAnimationStart(animation: Animation?) {}
 
             override fun onAnimationEnd(animation: Animation?) {
+                // 추천중 ... 업데이트
+                setLoadingString((++cnt) % 3)
+
+//                Log.d("ImgTest", "index: ${currentMenuIndex}, menu: ${menuNameList[currentMenuIndex]}")
                 currentMenuIndex = (currentMenuIndex + 1) % menuNameList.size
                 // 이미지 교체
                 menuIv.setImageResource(menuImgList.getResourceId(currentMenuIndex, -1))
@@ -172,11 +188,21 @@ class RecommendMenuDialog : DialogFragment() {
 
                 // 추천 결과가 있으면 애니메이션을 멈추고 결과를 업데이트
                 if (recommendMenu != null) {
-                    setRecommendationResult()
+                    handler.postDelayed({
+                        setRecommendationResult()
+                    }, 1000) // 메뉴를 보여주기까지 딜레이 주기
                 }
             }
 
             override fun onAnimationRepeat(animation: Animation?) {}
         })
+    }
+
+    private fun setLoadingString(cnt: Int) { // 로딩 상태 업데이트
+        var loadingString = ""
+        for (i: Int in 0 until cnt) {
+            loadingString += ". "
+        }
+        binding.dialogRecommendMenuLoadingTv.text = loadingString
     }
 }

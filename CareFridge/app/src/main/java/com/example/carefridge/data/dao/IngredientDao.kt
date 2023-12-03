@@ -19,13 +19,13 @@ interface IngredientDao {
     @Delete
     fun delete(ingredient: Ingredient)
 
-    @Query("SELECT * FROM ingredientTable")
+    @Query("SELECT * FROM IngredientTable")
     fun getIngredients(): List<Ingredient>
 
-    @Query("SELECT * FROM ingredientTable")
+    @Query("SELECT * FROM IngredientTable")
     fun getIngredientsLiveData(): LiveData<List<Ingredient>>
 
     // 사용자가 선호하는 재료 목록을 가져옴
-    @Query("SELECT * FROM ingredienttable WHERE isPrefer = :isPrefer")
+    @Query("SELECT * FROM IngredientTable WHERE isPrefer = :isPrefer")
     fun getUserPreferIngredients(isPrefer: Boolean): List<Ingredient>
 }
