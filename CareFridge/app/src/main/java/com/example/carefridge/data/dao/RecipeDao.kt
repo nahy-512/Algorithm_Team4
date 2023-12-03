@@ -1,8 +1,10 @@
 package com.example.carefridge.data.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.Query
 import androidx.room.Update
 import com.example.carefridge.data.entities.Recipe
 
@@ -16,4 +18,10 @@ interface RecipeDao {
 
     @Delete
     fun delete(recipe: Recipe)
+
+    @Query("SELECT * FROM recipeTable")
+    fun getRecipes(): List<Recipe>
+
+    @Query("SELECT * FROM recipeTable")
+    fun getRecipesLiveData(): LiveData<List<Recipe>>
 }

@@ -7,8 +7,6 @@ import androidx.room.PrimaryKey
 data class Recipe(
     val name: String = "",
     val ingredients: List<Pair<String, Int>>,
-//    val ingredientList: List<Ingredient>,
-//    val map: Map<String, Int>
 ) {
     @PrimaryKey(autoGenerate = true) var id: Int = 0
 }

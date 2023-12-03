@@ -59,8 +59,8 @@ class IngredientFragment : BaseFragment<FragmentIngredientBinding>(FragmentIngre
                 ingredients = db.ingredientDao().getIngredients() as ArrayList<Ingredient>
 
                 // 데이터가 잘 들어왔는지 확인
-                val _albums = db.ingredientDao().getIngredientsLiveData()
-                Log.d("DB data", _albums.toString())
+                val _ingredients = db.ingredientDao().getIngredientsLiveData()
+                Log.d("DB ingredients data", _ingredients.toString())
             }.start()
         }
     }

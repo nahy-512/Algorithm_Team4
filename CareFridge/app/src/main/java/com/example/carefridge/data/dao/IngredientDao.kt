@@ -24,4 +24,8 @@ interface IngredientDao {
 
     @Query("SELECT * FROM ingredientTable")
     fun getIngredientsLiveData(): LiveData<List<Ingredient>>
+
+    // 사용자가 선호하는 재료 목록을 가져옴
+    @Query("SELECT * FROM ingredienttable WHERE isPrefer = :isPrefer")
+    fun getUserPreferIngredients(isPrefer: Boolean): List<Ingredient>
 }

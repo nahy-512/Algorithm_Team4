@@ -26,13 +26,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         showAddDialog()
 
         // 알고리즘 테스트
-        testMenuRecommendAlgorithm()
+//        testMenuRecommendAlgorithm()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun testMenuRecommendAlgorithm() {
         // 메뉴 추천 알고리즘 테스트
-        MenuRecommendAlgorithm.main()
+//        MenuRecommendAlgorithm.main()
     }
 
     private fun showInit() {
