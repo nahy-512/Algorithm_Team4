@@ -1,11 +1,10 @@
 # Algorithm_Team4
 > 알고리즘 TEAM 4 Term Project
 
-<br>
-
-**목차**
+<b>[목차]</b>
   - [프로젝트 개요](#프로젝트-개요)
-  - 적용 알고리즘
+    - [프로젝트 설명](#프로젝트-설명)
+    - [알고리즘 소개](#알고리즘-소개)
   - [참여 인원](#참여-인원)
   - [Git 컨벤션](#git-컨벤션)
     - [commit message 형식](#commit-message-형식)
@@ -14,16 +13,34 @@
 <br>
 
 ## 프로젝트 개요
+![header](https://capsule-render.vercel.app/api?type=waving&color=8AC9FB&height=250&section=header&text=CareFridge&fontSize=90)
+### 프로젝트 설명
+> 냉장고에 있는 재료를 바탕으로 메뉴를 추천해 주는 어플
 
-<b><주제></b>   
-사용자가 선호하는 음식의 재료를 입력하고 그 안에서 재료의 양과 유통기한을 고려하여 가중치를 다르게 부여하고 그에 따라 가장 높은 값, 점수를 갖게 되는 음식을 최종으로 추천하는 프로그램 개발
-(만약에 선호하는 음식을 입력하지 않고 enter 을 누를 시 없다고 판단하고 모든 재료를 대상으로 양과 유통기한을 고려)
-
-
+<table>
+  <tr>
+    <td align="center"><b>CareFridge</b></td>
+    <td align="center"><b>🛠️ 핵심 기능</b></td>
+  </tr>
+ <tr>
+    <td align="left"><image width="250" alt="Logo" src="https://github.com/nahy-512/Algorithm_Team4/assets/101113025/5a2a147c-924f-46ca-986d-2870f1a8d5be"> </td>
+    <td align="left">
+      1. <b>재료 추가</b><br>
+        - 재료 이름과 유통기한, 양, 선호도를 설정할 수 있습니다.<br>
+        - 재료는 수정과 삭제도 가능합니다.<br><br>
+      2. <b>저장한 재료 보기</b><br>
+        - 현재 냉장고에 있는 재료를 리스트 형태로 시각화해서 보여줍니다.<br>
+        - 유통기한까지 남은 재료의 디데이도 확인할 수 있습니다.<br><br>
+      3. <b>메뉴 추천</b><br><t>
+        - 냉장고에 있는 재료의 양, 유통기한, 선호도를 고려하여 재료마다 가중치를 계산하고, 가장 높은 점수를 가진 메뉴를 추천해 줍니다.<br>
+        - 메뉴가 마음에 들지 않는다면 재추천을 받을 수도 있습니다.<br>
+    </td>
+  </tr>
+</table>
 
 <br><br>
 
-## 적용 알고리즘
+### 알고리즘 소개
 <b> <프로그램 구조> </b>   
   +java 로 작성
   1) 사용자에게 선호하는 재료를 입력 받기
