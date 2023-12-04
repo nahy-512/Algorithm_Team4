@@ -7,13 +7,21 @@ import com.example.carefridge.data.entities.Recipe
 // 냉장고 음식 기반 메뉴 추천 알고리즘 코드
 object MenuRecommendAlgorithm {
 
-    // 사용자의 선호 재료 목록을 저장할 Set
+    // 사용자의 선호 재료에 부여할 가중치를 정의
+    private val PREFER_WEIGHT = 100
+
+    // 사용자가 선호히는 재료 목록을 저장할 리스트
     private var userPreferences : List<String>? = null
 
+    /*
+    ingredients: 현재 냉장고에 있는 모든 재료의 리스트
+    recipes: 미리 저장된 레시피 리스트 (요리에 필요한 재료와 양이 List<Pair<String, Int> 형태로 저장되어 있음)
+    userPreferences: 냉장고 재료 중 사용자가 선호하는 재료 리스트
+     */
     fun main(ingredients: List<Ingredient>, recipes: List<Recipe>, userPreferences: List<String>): String {
         // 사용자의 선호 재료 목록 초기화
         initializeUserPreferences(userPreferences)
-        // 인자로 잘 넘어왔는지 로그 확인
+        // 인자로 잘 받아왔는지 로그를 찍어서 확인
         Log.d("RecommendAlgo", "재료: ${ingredients},\n레시피: ${recipes},\n사용자 선호 음식: $userPreferences")
 
         // 추천 받은 메뉴를 반환
@@ -43,10 +51,10 @@ object MenuRecommendAlgorithm {
                         // 가중치 계산 결과를 score에 저장
                         score += calculateWeight(ingredient)
                     }
-                    /// 사용자가 선호하는 재료가 들어간 레시피에는 가중치를 추가 부여
+                    // 사용자가 선호하는 재료가 들어간 레시피에는 가중치를 추가 부여
                     if (userPreferences!!.contains(ingredientName)) {
-                        // 추가 가중치 부여
-                        score += 100
+                        // 설정된 가중치를 선호 재료에 추가로 부여
+                        score += PREFER_WEIGHT
                     }
                 }
             }
