@@ -1,4 +1,4 @@
-# Algorithm_Team4
+# CareFridge
 
 > 알고리즘 TEAM 4 Term Project
 
